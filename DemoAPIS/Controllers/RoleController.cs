@@ -50,7 +50,11 @@ namespace DemoAPIS.Controllers
                 return BadRequest(message);
             }
             string result = rolerepositoy.AddRole(obj);
-            if (result == "Role Already Exists")
+            if (result== "User Id Required")
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseBack<Role> { Status = "Error", Message = "User Id Required", Data = null });
+            }
+           else if (result == "Role Already Exists")
             {
                 return StatusCode(StatusCodes.Status409Conflict, new ResponseBack<Role> { Status = "Ok", Message = "Role Already Exists", Data = null });
             }
@@ -77,6 +81,11 @@ namespace DemoAPIS.Controllers
             }
 
             string result = rolerepositoy.UpdateRole(obj);
+            if (result== "Modifiedby Id Required")
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseBack<Role> { Status = "Error", Message = "User Id Required", Data = null });
+            }
+
             if (result == "Role Updated Successfully")
             {
                 return StatusCode(StatusCodes.Status200OK, new ResponseBack<Role> { Status = "Ok", Message = "Role Updated Successfully", Data = null });
