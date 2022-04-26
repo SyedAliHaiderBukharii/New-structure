@@ -28,7 +28,7 @@ namespace DemoAPIS.Controllers
             try
             {
                 var Role = rolerepositoy.GetAllRole(skipCount, maxResultCount, search);
-                if (Role != null)
+                if (Role != null && Role.Count > 0)
                 {
                     return StatusCode(StatusCodes.Status200OK, new ResponseBack<List<Role>> { Status = "Ok", Message = "RecordFound", Data = Role });
                 }
@@ -39,7 +39,7 @@ namespace DemoAPIS.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+       
 
         [HttpPost(nameof(CreateRole))]
         public IActionResult CreateRole(Role obj)
@@ -50,6 +50,10 @@ namespace DemoAPIS.Controllers
                 return BadRequest(message);
             }
             string result = rolerepositoy.AddRole(obj);
+            if (result== "You Cannot delete person before Creating")
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ResponseBack<Role> { Status = "Error", Message = "You Cannot Delete Person Before Creating", Data = null });
+            }
             if (result== "User Id Required")
             {
                 return StatusCode(StatusCodes.Status400BadRequest, new ResponseBack<Role> { Status = "Error", Message = "User Id Required", Data = null });
